@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "0nmcp-crewai-local"
+version = "1.0.0"
+description = "MCP server wrapping the open-source crewAI Python library — run unlimited self-hosted crews from any MCP client. Built by 0nORK."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "0nORK", email = "hello@0nork.com" }]
+keywords = ["mcp", "mcp-server", "model-context-protocol", "crewai", "ai-agents", "0nmcp", "0nork", "self-hosted"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "mcp>=1.4.0",
+  "crewai>=0.95.0",
+  "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://0nmcp.com"
+Repository = "https://github.com/0nork/crewai-mcp-local"
+Issues = "https://github.com/0nork/crewai-mcp-local/issues"
+
+[project.scripts]
+crewai-mcp-local = "crewai_mcp_local.cli:main"
+"0nmcp-crewai-local" = "crewai_mcp_local.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/crewai_mcp_local"]

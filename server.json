@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.0nork/crewai-mcp-local",
+  "title": "CrewAI Local",
+  "description": "Self-hosted, unlimited crewAI runs from any MCP client. Wraps the open-source crewAI Python library — no Enterprise quota. Counterpart to 0nmcp-crewai (Enterprise wrapper). Built by 0nORK.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/0nork/crewai-mcp-local",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "0nmcp-crewai-local",
+      "version": "1.0.0",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "OPENAI_API_KEY",
+          "description": "Most crewAI agents need a model provider key. OpenAI is the default.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "GROQ_API_KEY",
+          "description": "Alternative provider — faster + cheaper for many crews.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "CREWAI_LLM_MODEL",
+          "description": "Default model name (e.g., gpt-4o-mini, llama-3.3-70b-versatile).",
+          "isRequired": false
+        },
+        {
+          "name": "CREWAI_LLM_BASE_URL",
+          "description": "Override the LLM base URL — for self-hosted Ollama or custom endpoints.",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}

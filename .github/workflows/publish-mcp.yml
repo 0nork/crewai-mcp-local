@@ -1,0 +1,59 @@
+name: Publish to PyPI + MCP Registry
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      republish_pypi:
+        description: 'Also republish to PyPI (requires PYPI_API_TOKEN secret)'
+        type: boolean
+        default: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip build
+
+      - name: Build wheel + sdist
+        run: python -m build
+
+      - name: Publish to PyPI
+        if: github.event_name == 'push' || inputs.republish_pypi == true
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Sync version in server.json
+        if: github.event_name == 'push'
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          python -c "import json; d = json.load(open('server.json')); d['version'] = '$VERSION'; d['packages'][0]['version'] = '$VERSION'; json.dump(d, open('server.json','w'), indent=2)"
+          cat server.json
+
+      - name: Install mcp-publisher
+        run: |
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry (OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish
