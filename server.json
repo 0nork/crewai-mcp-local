@@ -30,7 +30,7 @@
         },
         {
           "name": "CREWAI_LLM_MODEL",
-          "description": "Default model name (e.g., gpt-4o-mini, llama-3.3-70b-versatile).",
+          "description": "Default model name (e.g., gpt-4o-mini, openai/gpt-oss-120b).",
           "isRequired": false
         },
         {
